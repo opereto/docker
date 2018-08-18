@@ -1,0 +1,88 @@
+cmd:
+  type: python-venv
+  command:
+    default: python -u run.py
+  path:
+    default: ~/.opereto/operetovenv
+item_properties:
+
+-   editor: text
+    key: container_id
+    direction: input
+    mandatory: true
+    type: text
+    value:
+    help: Container identifier
+-   editor: text
+    key: command
+    direction: input
+    mandatory: true
+    type: text
+    value:
+    help: Command to be executed
+-   editor: text
+    key: workdir
+    direction: input
+    mandatory: true
+    type: text
+    value: /
+    help: Path to working directory for this exec session
+-   editor: text
+    key: user
+    direction: input
+    mandatory: true
+    type: text
+    value: root
+    help: User to execute the command
+-   editor: checkbox
+    key: tty
+    direction: input
+    mandatory: false
+    type: boolean
+    value: false
+    help: Allocate a pseudo-TTY
+-   editor: checkbox
+    key: privileged
+    direction: input
+    mandatory: false
+    type: boolean
+    value: false
+    help: Run as privileged
+-   editor: checkbox
+    key: detach
+    direction: input
+    mandatory: false
+    type: boolean
+    value: false
+    help: If true, detach from the exec command
+-   editor: json
+    key: env_params
+    direction: input
+    mandatory: false
+    type: json
+    value: {}
+    help: A map of environment key-value strings
+-   editor: number
+    key: expected_exitcode
+    direction: input
+    mandatory: false
+    type: integer
+    value: null
+    help: Expected command exitcode indicating command success
+-   direction: output
+    editor: hidden
+    key: stdout
+    mandatory: true
+    store: []
+    type: text
+    value: ''
+-   direction: output
+    editor: hidden
+    example: 0
+    key: exitcode
+    mandatory: true
+    store: []
+    type: integer
+    value: 0
+timeout: 300
+type: action

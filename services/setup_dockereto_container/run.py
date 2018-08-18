@@ -1,0 +1,178 @@
+import sys
+from opereto.helpers.services import ServiceTemplate
+from opereto.helpers.dockereto import Dockereto
+from opereto.utils.shell import run_shell_cmd
+from opereto.exceptions import *
+import time
+import uuid
+import os
+
+class ServiceRunner(ServiceTemplate):
+
+    def __init__(self, **kwargs):
+        ServiceTemplate.__init__(self, **kwargs)
+
+    def setup(self):
+        self.container=None
+        self.cleanup=False
+        raise_if_not_root()
+        raise_if_not_ubuntu()
+        self.dockereto = Dockereto()
+
+    def validate_input(self):
+        ## set and validate users
+        source_user = self.client.input['opereto_originator_username']
+        self.users = [source_user]
+        self.owners = [source_user]
+
+        try:
+            if self.input['additional_users'] is not None:
+                additional_users = self.input['additional_users'].replace(" ", "").split(',')
+        except:
+            additional_users=[]
+        try:
+            if self.input['additional_owners'] is not None:
+                additional_owners = self.input['additional_owners'].replace(" ", "").split(',')
+        except:
+            additional_owners=[]
+        self.users = [source_user] + list(set([x for x in additional_users if x]))
+        self.owners = [source_user] + list(set([x for x in additional_owners if x]))
+
+        all_users = self.users+self.owners
+        existing_users = self.client.search_users()
+        existing_user_ids=[]
+        for existing in existing_users:
+            existing_user_ids.append(existing['id'])
+        for user in all_users:
+            if user!='' and user not in existing_user_ids:
+                print >> sys.stderr, 'User {} does not exist'.format(user)
+                return self.client.FAILURE
+
+        ## agent_properties
+
+        ## post_operations
+
+
+
+    def process(self):
+
+        agent_id = 'dockereto-'+str(uuid.uuid4())[:12]
+        self._print_step_title('Setup container..')
+        image_name = self.input['docker_image']
+        if self.input['fetch_from_dockerhub']:
+            self._print_step_title('Fetching image from docker hub..')
+            (rc, out, error) = run_shell_cmd('docker pull {}'.format(image_name))
+            if rc:
+                print >> sys.stderr, 'Failed to fetch image from docker hub'
+                print >> sys.stderr, out+error
+                return self.client.FAILURE
+
+        additional_config = self.input['container_config'] or {}
+        install_agent=False
+
+        if self.input['embedded_agent']:
+            agent_cred = {
+                'opereto_host': self.input['opereto_host'],
+                'opereto_user': self.input['opereto_user'],
+                'opereto_password': self.input['opereto_password'],
+                'agent_name': agent_id,
+                'log_level': 'info',
+                'javaParams':'-Xms1000m -Xmx1000m'
+            }
+            if additional_config.get('environment'):
+                additional_config['environment'].update(agent_cred)
+            else:
+                additional_config['environment']=agent_cred
+        else:
+            install_agent=True
+
+        self.container = self.dockereto.setup_container(image_name, **additional_config)
+
+        container_cred = {
+            'container_id': self.container.id,
+            'host_agent': self.input['opereto_agent'],
+            'container_agent': agent_id
+        }
+        self.client.modify_process_property('container_credentials', container_cred)
+
+        WAIT_AGENT_ITERATIONS=10
+        if install_agent:
+            WAIT_AGENT_ITERATIONS=20
+            self._print_step_title('Installing opereto agent on container..')
+
+            def copy_files(file):
+                source = os.path.join(self.input['opereto_workspace'], file)
+                dest = os.path.join('/', file)
+                copy_pid = self.client.create_process('docker_copy', container_id=self.container.id, host_path=source, container_path=dest, copy_direction='host_to_container')
+                if not self.client.is_success(copy_pid):
+                    self.cleanup=True
+                    return self.client.FAILURE
+
+            if copy_files('opereto-agent.jar'):
+                return self.client.FAILURE
+            if copy_files('run-opereto-agent.sh'):
+                return self.client.FAILURE
+
+
+            cmd_pid0 = self.client.create_process('docker_exec_cmd', workdir='/', container_id=self.container.id, command='chmod 777 run-opereto-agent.sh')
+            if not self.client.is_success(cmd_pid0):
+                self.cleanup=True
+                return self.client.FAILURE
+
+            install_cmd = '/run-opereto-agent.sh -b {} -u {} -p {} -n {} -o root -g root'.format(self.input['opereto_host'], self.input['opereto_user'], self.input['opereto_password'], agent_id)
+            cmd_pid = self.client.create_process('docker_exec_cmd', detach=True, workdir='/', container_id=self.container.id, command=install_cmd)
+            if not self.client.is_success(cmd_pid):
+                self.cleanup=True
+                return self.client.FAILURE
+
+
+        ## check agent availability
+        self._print_step_title('Waiting for container agent to connect..')
+        agent_is_up = False
+        for i in range(WAIT_AGENT_ITERATIONS):
+            try:
+                agent_status = self.client.get_agent_status(agent_id)
+                if agent_status['online']:
+                    agent_is_up = True
+                    print 'Container agent is up and running.'
+                    break
+            except:
+                pass
+            time.sleep(10)
+
+        if not agent_is_up:
+            print >> sys.stderr, 'Container agent is not connected.'
+            self.cleanup=True
+            return self.client.FAILURE
+
+        ## create/modify agent
+        permissions = {
+            'owners': self.users,
+            'users': self.owners
+        }
+        agent_properties = self.input['agent_properties']
+        agent_properties.update({'container_host_agent': self.input['opereto_agent'], 'container_id': self.container.id })
+
+        self.client.modify_agent_properties(agent_id, agent_properties)
+        self.client.modify_agent(agent_id, name=self.input['agent_name'], description=self.input['agent_description'], permissions=permissions)
+
+        ## run post install services
+        for service in self.input['post_operations']:
+            input = service.get('input') or {}
+            pid = self.client.create_process(service=service['service'], agent=agent_id, title=service.get('title'), **input)
+            if not self.client.is_success(pid):
+                self.cleanup=True
+                return self.client.FAILURE
+
+        return self.client.SUCCESS
+
+    def teardown(self):
+        if self.cleanup:
+            self.dockereto.teardown_container(self.container.id)
+
+
+if __name__ == "__main__":
+    exit(ServiceRunner().run())
+
+
+

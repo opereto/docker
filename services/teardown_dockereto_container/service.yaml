@@ -1,0 +1,16 @@
+cmd:
+  type: python-venv
+  command:
+    default: python -u run.py
+  path:
+    default: ~/.opereto/operetovenv
+item_properties:
+-   editor: text
+    key: container_id
+    direction: input
+    mandatory: true
+    type: text
+    value:
+    help: Container identifier
+timeout: 300
+type: action

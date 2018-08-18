@@ -1,0 +1,67 @@
+{
+    "id": "opereto_docker_services",
+    "globals": [
+        {
+            "id": "opereto_docker_services-dockerhub_credentials",
+            "hidden": true,
+            "value": "{\"username\": \"<DOCKERHUB_USERNAME>\", \"password\":\"<DOCKERHUB_PASSWORD>\"}",
+            "description": "a map containing the credentials: username, password and server (optional) used to login to dockerhub"
+        }
+    ],
+    "services": {
+        "install_docker_worker": {
+            "source_dir": "install_docker_worker",
+            "info": {
+              "summary": "Install docker framework on opereto worker host"
+            }
+        },
+        "uninstall_docker_worker": {
+            "source_dir": "uninstall_docker_worker",
+            "info": {
+              "summary": "Uninstall docker framework on opereto worker host"
+            }
+        },
+        "setup_dockereto_container": {
+            "source_dir": "setup_dockereto_container",
+            "info": {
+              "summary": "Setup dockereto - docker container with opereto agent - on opereto worker host"
+            }
+        },
+        "teardown_dockereto_container": {
+            "source_dir": "teardown_dockereto_container",
+            "info": {
+              "summary": "Teardown a running dockereto - docker container with opereto agent - on opereto worker host"
+            }
+        },
+        "docker_exec_cmd": {
+            "source_dir": "docker_exec_cmd",
+            "info": {
+              "summary": "Run a command inside this container. Similar to docker exec."
+            }
+        },
+        "docker_copy": {
+            "source_dir": "docker_copy",
+            "info": {
+              "summary": "Copy files or folders between a container and the local filesystem."
+            }
+        }
+    },
+    "dependencies": {
+        "opereto_core_services": {
+            "version": ">=1.0.91"
+        }
+    },
+    "additional_info": {
+        "license": "Apache License 2.0"
+    },
+    "repository": {},
+    "name": "Opereto Docker Services",
+    "summary": "Wrap test and automation tools as containers and use them on-demands",
+    "description": "Opereto container services allowing to setup, operate and teardown on-demand docker-based tool containers with an integrated opereto agent running on any opereto worker host and connected to opereto h (aka dockereto). Using containers is a highly convenient method to manage remote test tools, automation analyzers and processing utilities and other self-contained utilities. You may create any custom Dockerfile, include an opereto agent in it and save it in docker hub or as a local build on the opereto worker host.",
+    "version": "1.0.93",
+    "provider": "Opereto LTD",
+    "category": "Test & Automation Tools",
+    "provider_url": "http://www.opereto.com",
+    "web_url": "https://github.com/opereto/docker",
+    "large_icon": "opereto_docker_services.png"
+}

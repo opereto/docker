@@ -1,0 +1,36 @@
+cmd:
+  type: python-venv
+  command:
+    default: python -u run.py
+  path:
+    default: ~/.opereto/operetovenv
+item_properties:
+-   editor: selectbox
+    key: docker-ce-version
+    direction: input
+    mandatory: true
+    type: text
+    store:
+        latest: latest
+        18.03.0-ce: 18.03.0~ce-0~ubuntu
+    value: latest
+    help: docker community edition version
+-   editor: checkbox
+    key: update_sources
+    direction: input
+    mandatory: false
+    type: boolean
+    value: true
+    help: if true, will perform apt-get update prior to installation
+-   direction: input
+    editor: json
+    key: dockerhub_credentials
+    mandatory: false
+    type: json
+    value: GLOBALS.opereto_docker_services-dockerhub_credentials
+    help: a map containing the docker hub credentials - username, password and server (optional) used to login to dockerhub
+    example:
+        username: dockerhubuser
+        password: dockerhubpass
+timeout: 180
+type: action

@@ -1,0 +1,40 @@
+cmd:
+  type: python-venv
+  command:
+    default: python -u run.py
+  path:
+    default: ~/.opereto/operetovenv
+item_properties:
+-   editor: text
+    key: container_id
+    direction: input
+    mandatory: true
+    type: text
+    value:
+    help: Container identifier
+-   editor: text
+    key: container_path
+    direction: input
+    mandatory: true
+    type: text
+    value:
+    help: The path to file or directory in the container
+-   editor: text
+    key: host_path
+    direction: input
+    mandatory: true
+    type: text
+    value:
+    help: The path to file or directory on the host
+-   editor: selectbox
+    key: copy_direction
+    direction: input
+    mandatory: true
+    type: text
+    store:
+        host_to_container: host_to_container
+        container_to_host: container_to_host
+    value: host_to_container
+    help: Identifying the source and destination for the copy operations
+timeout: 300
+type: action

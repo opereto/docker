@@ -1,0 +1,91 @@
+cmd:
+  type: python-venv
+  command:
+    default: python -u run.py
+  path:
+    default: ~/.opereto/operetovenv
+
+item_properties:
+-   direction: input
+    editor: text
+    key: docker_image
+    mandatory: true
+    type: text
+    value:
+-   direction: input
+    editor: checkbox
+    key: fetch_from_dockerhub
+    mandatory: false
+    type: boolean
+    value: false
+-   direction: input
+    editor: checkbox
+    key: embedded_agent
+    mandatory: false
+    type: boolean
+    value: true
+    help: True is opereto agent is embedded in the container. Otherwise, agent will be installed via docker command after the container is up and running.
+-   direction: input
+    editor: text
+    help: Custom name for this container tool agent
+    key: agent_name
+    mandatory: false
+    type: text
+    value: null
+-   direction: input
+    editor: textarea
+    help: Additional description for this container tool agent
+    key: agent_description
+    mandatory: false
+    type: text
+    value: null
+-   direction: input
+    editor: text
+    key: additional_users
+    mandatory: false
+    type: text
+    value: null
+    help: Additional users that may use this container tool agent in opereto
+-   direction: input
+    editor: text
+    help: Additional owners that may modify this container tool agent credentials in opereto
+    key: additional_owners
+    mandatory: false
+    type: text
+    value: null
+-   direction: input
+    editor: json
+    help: Additional custom container configuration (see Container Configuration section of service description)
+    key: container_config
+    mandatory: false
+    type: json
+    value:
+        restart_policy:
+            Name: always
+-   direction: input
+    editor: json
+    help: Additional custom agent properties
+    key: agent_properties
+    mandatory: false
+    type: json
+    value: {}
+-   direction: input
+    editor: json
+    help: Services to run on the container agent post setup
+    example:
+    - service: run_shell_command
+      input:
+          command: apt-get update
+      title: updaring package sources after container is up
+    key: post_operations
+    mandatory: false
+    type: json
+    value: []
+-   direction: output
+    editor: hidden
+    key: container_credentials
+    mandatory: false
+    type: json
+    value: null
+timeout: 300
+type: action
