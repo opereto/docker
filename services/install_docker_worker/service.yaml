@@ -27,7 +27,7 @@ item_properties:
     key: dockerhub_credentials
     mandatory: false
     type: json
-    value: GLOBALS.opereto_docker_services-dockerhub_credentials
+    value: GLOBALS.opereto-docker-services-dockerhub_credentials
     help: a map containing the docker hub credentials - username, password and server (optional) used to login to dockerhub
     example:
         username: dockerhubuser
