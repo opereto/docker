@@ -9,14 +9,14 @@
         }
     ],
     "services": {
-        "install_docker_worker": {
-            "source_dir": "install_docker_worker",
+        "install_docker": {
+            "source_dir": "install_docker",
             "info": {
               "summary": "Install docker framework on opereto worker host"
             }
         },
-        "uninstall_docker_worker": {
-            "source_dir": "uninstall_docker_worker",
+        "uninstall_docker": {
+            "source_dir": "uninstall_docker",
             "info": {
               "summary": "Uninstall docker framework on opereto worker host"
             }
@@ -44,6 +44,18 @@
             "info": {
               "summary": "Copy files or folders between a container and the local filesystem."
             }
+        },
+        "add_opereto_worker_container": {
+            "source_dir": "add_opereto_worker_container",
+            "info": {
+              "summary": "Creates a new opereto worker container on a remote docker-based host"
+            }
+        },
+        "remove_opereto_worker_container": {
+            "source_dir": "remove_opereto_worker_container",
+            "info": {
+              "summary": "Removes an existing opereto worker container from a remote docker-based host"
+            }
         }
     },
     "dependencies": {
@@ -58,7 +70,7 @@
     "name": "Opereto Docker Services",
     "summary": "Wrap test and automation tools as containers and use them on-demands",
     "description": "Opereto container services allowing to setup, operate and teardown on-demand docker-based tool containers with an integrated opereto agent running on any opereto worker host and connected to opereto h (aka dockereto). Using containers is a highly convenient method to manage remote test tools, automation analyzers and processing utilities and other self-contained utilities. You may create any custom Dockerfile, include an opereto agent in it and save it in docker hub or as a local build on the opereto worker host.",
-    "version": "1.0.94",
+    "version": "1.0.101",
     "provider": "Opereto LTD",
     "category": "Test & Automation Tools",
     "provider_url": "http://www.opereto.com",

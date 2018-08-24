@@ -5,8 +5,8 @@ The package includes two services:
 
 | Service                               | Description                                                                                       |
 | --------------------------------------|:-------------------------------------------------------------------------------------------------:| 
-| services/install_docker_worker        | Install docker framework on opereto worker host                                                   | 
-| services/uninstall_docker_worker      | Uninstall docker framework on opereto worker host                                                 | 
+| services/install_docker        | Install docker framework on opereto worker host                                                   | 
+| services/uninstall_docker      | Uninstall docker framework on opereto worker host                                                 | 
 | services/setup_dockereto_container    | Setup dockereto - docker container with opereto agent - on opereto worker host                    | 
 | services/teardown_dockereto_container | Teardown a running dockereto - docker container with opereto agent - on opereto worker host       | 
 | services/docker_exec_cmd              | Run a command inside this container. Similar to docker exec.                                      | 

@@ -2,6 +2,7 @@ import sys
 from opereto.helpers.services import ServiceTemplate
 from opereto.helpers.dockereto import Dockereto
 from opereto.utils.shell import run_shell_cmd
+from opereto.utils.validations import JsonSchemeValidator, included_services_scheme, item_properties_scheme, default_entity_description_scheme, default_entity_name_scheme, default_variable_name_scheme
 from opereto.exceptions import *
 import time
 import uuid
@@ -48,15 +49,34 @@ class ServiceRunner(ServiceTemplate):
                 print >> sys.stderr, 'User {} does not exist'.format(user)
                 return self.client.FAILURE
 
+        self.agent_id = self.input['agent_identifier'] or 'dockereto-' + str(uuid.uuid4())[:12]
+
+        ## agent id
+        validator = JsonSchemeValidator(self.agent_id, default_variable_name_scheme)
+        validator.validate()
+
+        ## agent name
+        validator = JsonSchemeValidator(self.input['agent_name'], default_entity_name_scheme)
+        validator.validate()
+
+        ## agent description
+        validator = JsonSchemeValidator(self.input['agent_description'], default_entity_description_scheme)
+        validator.validate()
+
         ## agent_properties
+        if self.input['agent_properties']:
+            validator = JsonSchemeValidator(self.input['agent_properties'], item_properties_scheme)
+            validator.validate()
 
         ## post_operations
+        if self.input['post_operations']:
+            validator = JsonSchemeValidator(self.input['post_operations'], included_services_scheme)
+            validator.validate()
 
 
 
     def process(self):
 
-        agent_id = 'dockereto-'+str(uuid.uuid4())[:12]
         self._print_step_title('Setup container..')
         image_name = self.input['docker_image']
         if self.input['fetch_from_dockerhub']:
@@ -75,7 +95,7 @@ class ServiceRunner(ServiceTemplate):
                 'opereto_host': self.input['opereto_host'],
                 'opereto_user': self.input['opereto_user'],
                 'opereto_password': self.input['opereto_password'],
-                'agent_name': agent_id,
+                'agent_name': self.agent_id,
                 'log_level': 'info',
                 'javaParams':'-Xms1000m -Xmx1000m'
             }
@@ -91,7 +111,7 @@ class ServiceRunner(ServiceTemplate):
         container_cred = {
             'container_id': self.container.id,
             'host_agent': self.input['opereto_agent'],
-            'container_agent': agent_id
+            'container_agent': self.agent_id
         }
         self.client.modify_process_property('container_credentials', container_cred)
 
@@ -131,7 +151,7 @@ class ServiceRunner(ServiceTemplate):
         agent_is_up = False
         for i in range(WAIT_AGENT_ITERATIONS):
             try:
-                agent_status = self.client.get_agent_status(agent_id)
+                agent_status = self.client.get_agent_status(self.agent_id)
                 if agent_status['online']:
                     agent_is_up = True
                     print 'Container agent is up and running.'
@@ -153,13 +173,14 @@ class ServiceRunner(ServiceTemplate):
         agent_properties = self.input['agent_properties']
         agent_properties.update({'container_host_agent': self.input['opereto_agent'], 'container_id': self.container.id })
 
-        self.client.modify_agent_properties(agent_id, agent_properties)
-        self.client.modify_agent(agent_id, name=self.input['agent_name'], description=self.input['agent_description'], permissions=permissions)
+        self.client.modify_agent_properties(self.agent_id, agent_properties)
+        self.client.modify_agent(self.agent_id, name=self.input['agent_name'], description=self.input['agent_description'], permissions=permissions)
 
         ## run post install services
         for service in self.input['post_operations']:
             input = service.get('input') or {}
-            pid = self.client.create_process(service=service['service'], agent=agent_id, title=service.get('title'), **input)
+            agent = service.get('agents') or self.agent_id
+            pid = self.client.create_process(service=service['service'], agent=agent, title=service.get('title'), **input)
             if not self.client.is_success(pid):
                 self.cleanup=True
                 return self.client.FAILURE
