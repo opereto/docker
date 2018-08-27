@@ -27,7 +27,14 @@ item_properties:
     help: True is opereto agent is embedded in the container. Otherwise, agent will be installed via docker command after the container is up and running.
 -   direction: input
     editor: text
-    help: Custom name for this container tool agent
+    help: Custom agent unique identifier. If not provided, the service will assign one automatically.
+    key: agent_identifier
+    mandatory: false
+    type: text
+    value: null
+-   direction: input
+    editor: text
+    help: Custom display name for this container tool agent
     key: agent_name
     mandatory: false
     type: text

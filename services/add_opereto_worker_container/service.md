@@ -1,8 +1,7 @@
-This service removes a running dockereto container on a given remote agent host. 
-To learn more about dockereto containers, please check out the setup_dockereto_container service doumentation.
+This service creates a new opereto worker an remote docker-based hosts
 
 #### Service success criteria
-Success if container was running and removed successfuly. Otherwise, Failure.
+Success if Opereto worker is created. Otherwise, Failure.
 
 #### Assumptions/Limitations
 * Assumes that docker is installed on the remote agents host

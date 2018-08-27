@@ -1,0 +1,22 @@
+cmd:
+  type: python-venv
+  command:
+    default: python -u run.py
+  path:
+    default: ~/.opereto/operetovenv
+item_properties:
+-   direction: input
+    editor: text
+    help: Custom agent unique identifier. If not provided, the service will assign one automatically.
+    key: agent_identifier
+    mandatory: false
+    type: text
+    value: null
+-   direction: output
+    editor: hidden
+    key: container_credentials
+    mandatory: false
+    type: json
+    value: null
+timeout: 180
+type: action

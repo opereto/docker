@@ -1,4 +1,4 @@
 {
-   "opereto.worker": true,
+   "dockereto.worker": true,
    "mapping_indicator": "select"
 }
