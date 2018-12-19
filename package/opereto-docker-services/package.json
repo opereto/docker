@@ -56,6 +56,12 @@
             "info": {
               "summary": "Removes an existing opereto worker container from a remote docker-based host"
             }
+        },
+        "docker_test_runner": {
+            "source_dir": "docker_test_runner",
+            "info": {
+              "summary": "A generic runner to docker containerized test tools allowing to build and run tools and parse the results"
+            }
         }
     },
     "dependencies": {
@@ -70,7 +76,7 @@
     "name": "Opereto Docker Services",
     "summary": "Wrap test and automation tools as containers and use them on-demands",
     "description": "Opereto container services allowing to setup, operate and teardown on-demand docker-based tool containers with an integrated opereto agent running on any opereto worker host and connected to opereto h (aka dockereto). Using containers is a highly convenient method to manage remote test tools, automation analyzers and processing utilities and other self-contained utilities. You may create any custom Dockerfile, include an opereto agent in it and save it in docker hub or as a local build on the opereto worker host.",
-    "version": "1.0.102",
+    "version": "1.0.103",
     "provider": "Opereto LTD",
     "category": "Test & Automation Tools",
     "provider_url": "http://www.opereto.com",
