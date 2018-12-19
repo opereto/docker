@@ -20,8 +20,6 @@ The package includes two services:
 * Services are mapped to run on a standard opereto worker agent
 * opereto_core_services
         
-        
 ### Service packages documentation
-* [Learn more about automation packages and how to use them](http://help.opereto.com/support/solutions/articles/9000152583-an-overview-of-service-packages)
-* [Learn more how to extend this package or build custom packages](http://help.opereto.com/support/solutions/articles/9000152584-build-and-maintain-custom-packages)
-
+* [Learn more about automation packages and how to use them](https://docs.opereto.com/opereto-framework/automation_services/service-packages/)
+* [Learn more how to extend this package or build custom packages](https://docs.opereto.com/opereto-framework/automation_services/service-packages/build-custom-packages/)
