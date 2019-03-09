@@ -42,7 +42,7 @@ RUN apt-get -yy update && apt-get -yy upgrade && \
    rm -rf /var/lib/apt/lists/*
 
 RUN cd /opt && \
-    curl -O https://s3.amazonaws.com/opereto_downloads/opereto-agent-latest.tar.gz && \
+    curl -O https://s3.amazonaws.com/opereto-agent/opereto-agent-latest.tar.gz && \
     tar -zxvf opereto-agent-latest.tar.gz && \
     cd opereto-agent-latest && \
     chmod 777 -R *
@@ -100,7 +100,7 @@ RUN apt-get -yy update && apt-get -yy upgrade && \
    rm -rf /var/lib/apt/lists/*
 
 RUN cd /opt && \
-    curl -O https://s3.amazonaws.com/opereto_downloads/opereto-agent-latest.tar.gz && \
+    curl -O https://s3.amazonaws.com/opereto-agent/opereto-agent-latest.tar.gz && \
     tar -zxvf opereto-agent-latest.tar.gz && \
     cd opereto-agent-latest && \
     chmod 777 -R *

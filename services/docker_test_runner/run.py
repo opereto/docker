@@ -106,11 +106,18 @@ class ServiceRunner(ServiceTemplate):
         self.listener_pid = self.client.create_process('opereto_test_listener', test_results_path=self.listener_results_dir, parent_pid=self.parent_pid)
 
         ## run parser
-        self.parser_pid = self.client.create_process(self.input['parser_config']['service_id'],
-                                                     parser_directory_path=self.host_test_result_directory, listener_directory_path=self.listener_results_dir)
+        parser_input = self.input['parser_config'].get('input') or {}
+        parser_input.update({'parser_directory_path':self.host_test_result_directory, 'listener_directory_path': self.listener_results_dir})
+        self.parser_pid = self.client.create_process(self.input['parser_config']['service_id'], **parser_input)
+
+        time.sleep(5)
 
         ## add volume and env vars to command
         docker_cmd_splitted  = re.split('docker\s+run', self.input['docker_command'])
+        command_postfix = docker_cmd_splitted[0]
+        if len(docker_cmd_splitted) == 2:
+            command_postfix = docker_cmd_splitted[1]
+
         cmd_additional_params = '-v {}:{} '.format(self.host_test_result_directory, self.input['test_results_directory'])
         if self.input['docker_env_params']:
             cmd_additional_params += ' --env-file {} '.format(self.docker_env_vars)
@@ -118,13 +125,12 @@ class ServiceRunner(ServiceTemplate):
         cmd_image = self.docker_image
         if docker_cmd_splitted[1].find(self.docker_image)>=0:
             cmd_image=''
-        docker_cmd = 'docker run {} {} {}'.format(cmd_additional_params,docker_cmd_splitted[1], cmd_image)
+        docker_cmd = 'docker run {} {} {}'.format(cmd_additional_params,command_postfix, cmd_image)
 
         ## run container
         print 'Running: '+ docker_cmd
         (exc, out, error) = run_shell_cmd(docker_cmd, verbose=True)
         self.client.modify_process_property('exitcode', exc)
-
         if exc != 0:
             print >> sys.stderr, 'Docker execution failed. Aborting..'
             return self.client.FAILURE
@@ -144,6 +150,7 @@ class ServiceRunner(ServiceTemplate):
         make_directory(self.host_test_result_directory)
 
 
+
     def teardown(self):
         time.sleep(self.input['keep_parser_running'])
 
@@ -152,6 +159,7 @@ class ServiceRunner(ServiceTemplate):
         if self.listener_pid:
             self.client.stop_process(self.listener_pid)
 
+        time.sleep(10) ## wait for processes to get terminated
 
 if __name__ == "__main__":
     exit(ServiceRunner().run())
