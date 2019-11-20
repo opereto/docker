@@ -31,7 +31,7 @@ class ServiceRunner(ServiceTemplate):
 
 
         self._print_step_title('Updating docker config files..')
-        self.client.modify_agent_property(self.client.input['opereto_agent'], 'dockereto.worker', False)
+        self.client.modify_agent_property(self.client.input['opereto_agent'], 'opereto.docker.worker', False)
 
         print 'Docker was removed.'
         return self.client.SUCCESS

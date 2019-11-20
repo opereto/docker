@@ -8,7 +8,7 @@ Success if no docker is installed at the end (e.g. it will succeed even if docke
 * Requires that remote agent will have the following property
 ```
 {
-    "dockereto.worker": true
+    "opereto.docker.worker": true
 }
 ```
 * Requires that opereto worker lib is installed 

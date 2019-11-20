@@ -8,7 +8,7 @@ Success if copy was successful. Otherwise, Failure.
 * Requires that remote agent will have the following property
 ```
 {
-    "dockereto.worker": true
+    "opereto.docker.worker": true
 }
 ```
 * Requires that opereto worker lib is installed 
