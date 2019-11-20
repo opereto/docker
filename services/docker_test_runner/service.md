@@ -5,7 +5,7 @@ base on user-defined parser service passed to it.
 This runner acts under the following assumptions:
 1. It gets the docker containerized test tool results directory as an input, creates a local directory on the host and mounts it to the container results directory so that test results will be accessible by this service.
 1. It assumes that the test tools container execution command ends with 0 for successful test execution. Any other exitcode is considered as a test failure.
-1. It gets a pre-defined test results parser service as an input. The parser service must setisfy Opereto test result parser requirements.
+1. It gets a pre-defined test results parser service as an input. The parser service must satisfy Opereto test result parser requirements.
 
 
 #### Service success criteria
