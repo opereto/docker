@@ -48,7 +48,7 @@
         "docker_task_runner": {
             "source_dir": "docker_task_runner",
             "info": {
-              "summary": "A generic task runner to docker containerized tools allowing to build and run containerized tools on docker host, parse test tools results Etc."
+              "summary": "A generic task runner to docker containerized tools allowing to build and run containerized tools on docker host, parse test tools results and more"
             }
         }
     },
