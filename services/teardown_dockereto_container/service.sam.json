@@ -1,4 +1,4 @@
 {
-   "dockereto.worker": true,
+   "opereto.docker.worker": true,
    "mapping_indicator": "select"
 }

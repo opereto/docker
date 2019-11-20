@@ -8,7 +8,7 @@ Success if container is running. Otherwise, Failure.
 * Requires that remote agent will have the following property
 ```
 {
-    "dockereto.worker": true
+    "opereto.docker.worker": true
 }
 ```
 * Requires that opereto worker lib is installed 
@@ -42,7 +42,7 @@ RUN apt-get -yy update && apt-get -yy upgrade && \
    rm -rf /var/lib/apt/lists/*
 
 RUN cd /opt && \
-    curl -O https://s3.amazonaws.com/opereto-agent/opereto-agent-latest.tar.gz && \
+    curl -O https://s3.amazonaws.com/opereto_downloads/opereto-agent-latest.tar.gz && \
     tar -zxvf opereto-agent-latest.tar.gz && \
     cd opereto-agent-latest && \
     chmod 777 -R *
@@ -58,7 +58,7 @@ ENV opereto_user ""
 ENV opereto_password ""
 ENV log_level="info"
 
-CMD java $javaParams -jar /opt/opereto-agent-latest/opereto-agent.jar -host $opereto_host -name $agent_name -u $opereto_user -p $opereto_password -loglevel $log_level
+CMD java $javaParams -jar /opt/opereto-agent-latest/opereto-agent.jar -host $opereto_host -name $agent_name -u $opereto_user -p $opereto_password -loglevel $log_level -log console
 ```
 
 For example, the following Dockerfile creates testcafe test tool dockereto container:
@@ -100,7 +100,7 @@ RUN apt-get -yy update && apt-get -yy upgrade && \
    rm -rf /var/lib/apt/lists/*
 
 RUN cd /opt && \
-    curl -O https://s3.amazonaws.com/opereto-agent/opereto-agent-latest.tar.gz && \
+    curl -O https://s3.amazonaws.com/opereto_downloads/opereto-agent-latest.tar.gz && \
     tar -zxvf opereto-agent-latest.tar.gz && \
     cd opereto-agent-latest && \
     chmod 777 -R *
@@ -116,7 +116,7 @@ ENV opereto_user ""
 ENV opereto_password ""
 ENV log_level="info"
 
-CMD java $javaParams -jar /opt/opereto-agent-latest/opereto-agent.jar -host $opereto_host -name $agent_name -u $opereto_user -p $opereto_password -loglevel $log_level
+CMD java $javaParams -jar /opt/opereto-agent-latest/opereto-agent.jar -host $opereto_host -name $agent_name -u $opereto_user -p $opereto_password -loglevel $log_level -log console
 ```
 
 #### Container configuration 

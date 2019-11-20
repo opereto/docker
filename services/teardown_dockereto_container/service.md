@@ -9,7 +9,7 @@ Success if container was running and removed successfuly. Otherwise, Failure.
 * Requires that remote agent will have the following property
 ```
 {
-    "dockereto.worker": true
+    "opereto.docker.worker": true
 }
 ```
 * Requires that opereto worker lib is installed 

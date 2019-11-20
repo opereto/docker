@@ -87,7 +87,7 @@ class ServiceRunner(ServiceTemplate):
         print out4+error4
 
         self._print_step_title('Updating docker worker agent property..')
-        self.client.modify_agent_property(self.input['opereto_agent'], 'dockereto.worker', True)
+        self.client.modify_agent_property(self.input['opereto_agent'], 'opereto.docker.worker', True)
 
         print 'Docker worker added successfully.'
         return self.client.SUCCESS

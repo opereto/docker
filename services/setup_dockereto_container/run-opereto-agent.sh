@@ -112,7 +112,7 @@ sudo sed --in-place /requiretty/d /etc/sudoers
 sudo sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile
 
 # run agent if not running
-agent_cmd="java $javaParams -jar opereto-agent.jar -host $opereto_host -name $agent_name -u $opereto_user -p $opereto_pass -loglevel $log_level &"
+agent_cmd="java $javaParams -jar opereto-agent.jar -host $opereto_host -name $agent_name -u $opereto_user -p $opereto_pass -loglevel $log_level -log console &"
 
 `ps -ef | grep opereto-agent | grep -v grep`
 if [ $? -ne 0 ]; then
