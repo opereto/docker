@@ -63,11 +63,10 @@ class ServiceRunner(TaskRunner):
         ## run container
         print 'Running: ' + docker_cmd
         (exc, out, error) = run_shell_cmd(docker_cmd, verbose=True)
-        self.client.modify_process_property('exitcode', exc)
-
         if exc not in self.valid_exit_codes:
             print >> sys.stderr, 'Docker execution failed..'
-            self.exitcode = 2
+            return self.client.FAILURE
+        return self.client.SUCCESS
 
     def _setup(self):
         self.docker_image = self.input['docker_image']
