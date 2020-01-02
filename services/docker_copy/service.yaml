@@ -36,5 +36,6 @@ item_properties:
         container_to_host: container_to_host
     value: host_to_container
     help: Identifying the source and destination for the copy operations
-timeout: 300
+
+timeout: 600
 type: action
