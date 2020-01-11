@@ -39,7 +39,7 @@ class ServiceRunner(TaskRunner):
 
     def _run_task(self):
 
-        command_prefix = ' -v {}:{}'.format(self.host_test_result_directory, self.input['test_results_directory'])
+        command_prefix = ' -v {}:{}'.format(self.parser_results_directory, self.test_results_directory)
 
         ## add volume and env vars to command
         docker_cmd_splitted = re.split('docker\s+run', self.docker_command)
@@ -61,10 +61,10 @@ class ServiceRunner(TaskRunner):
         docker_cmd = 'docker run {}{}'.format(command_prefix, command_postfix)
 
         ## run container
-        print 'Running: ' + docker_cmd
+        self._print_step_title('Running docker container task..')
+        print('Command: {}'.format(docker_cmd))
         (exc, out, error) = run_shell_cmd(docker_cmd, verbose=True)
-        if exc not in self.valid_exit_codes:
-            print >> sys.stderr, 'Docker execution failed..'
+        if exc!=0:
             return self.client.FAILURE
         return self.client.SUCCESS
 
