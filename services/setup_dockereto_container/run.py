@@ -93,8 +93,7 @@ class ServiceRunner(ServiceTemplate):
         if self.input['embedded_agent']:
             agent_cred = {
                 'opereto_host': self.input['opereto_host'],
-                'opereto_user': self.input['opereto_user'],
-                'opereto_password': self.input['opereto_password'],
+                'opereto_token': self.input['opereto_token'],
                 'agent_name': self.agent_id,
                 'log_level': 'info',
                 'javaParams':'-Xms1000m -Xmx1000m'
@@ -139,7 +138,7 @@ class ServiceRunner(ServiceTemplate):
                 self.cleanup=True
                 return self.client.FAILURE
 
-            install_cmd = '/run-opereto-agent.sh -b {} -u {} -p {} -n {} -o root -g root'.format(self.input['opereto_host'], self.input['opereto_user'], self.input['opereto_password'], agent_id)
+            install_cmd = '/run-opereto-agent.sh -h {} -t {} -n {} -o root -g root'.format(self.input['opereto_host'], self.input['opereto_token'], self.agent_id)
             cmd_pid = self.client.create_process('docker_exec_cmd', detach=True, workdir='/', container_id=self.container.id, command=install_cmd)
             if not self.client.is_success(cmd_pid):
                 self.cleanup=True
