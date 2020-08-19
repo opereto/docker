@@ -8,7 +8,7 @@ Success if container is running. Otherwise, Failure.
 * Requires that remote agent will have the following property
 ```
 {
-    "dockereto.worker": true
+    "opereto.docker.worker": true
 }
 ```
 * Requires that opereto worker lib is installed 
@@ -54,11 +54,10 @@ RUN apt-get -yy update && apt-get install -yy default-jre && sudo apt-get instal
 ENV javaParams "-Xms1000m -Xmx1000m"
 ENV opereto_host ""
 ENV agent_name ""
-ENV opereto_user ""
-ENV opereto_password ""
+ENV opereto_token ""
 ENV log_level="info"
 
-CMD java $javaParams -jar /opt/opereto-agent-latest/opereto-agent.jar -host $opereto_host -name $agent_name -u $opereto_user -p $opereto_password -loglevel $log_level
+CMD java $javaParams -jar /opt/opereto-agent-latest/opereto-agent.jar -host $opereto_host -name $agent_name -token $opereto_token -loglevel $log_level -log console
 ```
 
 For example, the following Dockerfile creates testcafe test tool dockereto container:
@@ -112,11 +111,10 @@ RUN apt-get -yy update && apt-get install -yy default-jre && sudo apt-get instal
 ENV javaParams "-Xms1000m -Xmx1000m"
 ENV opereto_host ""
 ENV agent_name ""
-ENV opereto_user ""
-ENV opereto_password ""
+ENV opereto_token ""
 ENV log_level="info"
 
-CMD java $javaParams -jar /opt/opereto-agent-latest/opereto-agent.jar -host $opereto_host -name $agent_name -u $opereto_user -p $opereto_password -loglevel $log_level
+CMD java $javaParams -jar /opt/opereto-agent-latest/opereto-agent.jar -host $opereto_host -name $agent_name -token $opereto_token -loglevel $log_level -log console
 ```
 
 #### Container configuration 

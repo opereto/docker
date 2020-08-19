@@ -45,16 +45,10 @@
               "summary": "Copy files or folders between a container and the local filesystem."
             }
         },
-        "add_opereto_worker_container": {
-            "source_dir": "add_opereto_worker_container",
+        "docker_task_runner": {
+            "source_dir": "docker_task_runner",
             "info": {
-              "summary": "Creates a new opereto worker container on a remote docker-based host"
-            }
-        },
-        "remove_opereto_worker_container": {
-            "source_dir": "remove_opereto_worker_container",
-            "info": {
-              "summary": "Removes an existing opereto worker container from a remote docker-based host"
+              "summary": "A generic task runner to docker containerized tools allowing to build and run containerized tools on docker host, parse test tools results and more"
             }
         },
         "docker_test_runner": {
@@ -74,9 +68,9 @@
     },
     "repository": {},
     "name": "Opereto Docker Services",
-    "summary": "Wrap test and automation tools as containers and use them on-demands",
-    "description": "Opereto container services allowing to setup, operate and teardown on-demand docker-based tool containers with an integrated opereto agent running on any opereto worker host and connected to opereto h (aka dockereto). Using containers is a highly convenient method to manage remote test tools, automation analyzers and processing utilities and other self-contained utilities. You may create any custom Dockerfile, include an opereto agent in it and save it in docker hub or as a local build on the opereto worker host.",
-    "version": "1.0.103",
+    "summary": "This package allows wrapping test and automation tool containers as Opereto services and use them on-demands",
+    "description": "Opereto Docker services allowing to setup, operate and teardown on-demand docker-based tool containers with an integrated opereto agent running on any opereto worker host and connected to opereto h (aka dockereto). Using containers is a highly convenient method to manage remote test tools, automation analyzers and processing utilities and other self-contained utilities. You may create any custom Dockerfile, include an opereto agent in it and save it in docker hub or as a local build on the opereto worker host.",
+    "version": "1.0.146",
     "provider": "Opereto LTD",
     "category": "Test & Automation Tools",
     "provider_url": "http://www.opereto.com",

@@ -2,8 +2,7 @@
 
 log_level="info"
 opereto_host=
-opereto_user=
-opereto_pass=
+opereto_token=
 agent_os_user=$USER
 agent_os_group=$agent_os_user
 agent_name=`hostname`
@@ -42,14 +41,11 @@ fi
 
 while getopts b:u:p:n:o:g:l:d opt; do
   case $opt in
-  b)
+  h)
       opereto_host=$OPTARG
       ;;
-  u)
-      opereto_user=$OPTARG
-      ;;
-  p)
-      opereto_pass=$OPTARG
+  t)
+      opereto_token=$OPTARG
       ;;
   n)
       agent_name=$OPTARG
@@ -68,19 +64,18 @@ done
 shift $((OPTIND - 1))
 
 function usage {
-	echo `basename $0` -b BOXURL -u USER -p PASS [-n AGENTNAME] [-o OSUSER] [-g OSGROUP] [-l LOGLEVEL]
+	echo `basename $0` -h HOST -t TOKEN [-n AGENTNAME] [-o OSUSER] [-g OSGROUP] [-l LOGLEVEL]
 	echo ""
 	echo ""
-	echo "BOX_URL    : the address of opereto server (e.g. https:/192.168.0.1)"
-	echo "USER       : the user to login into the OperetoBox"
-	echo "PASS       : the password to use for login into the OperetoBox"
+	echo "HOST       : the address of opereto server (e.g. https:/192.168.0.1)"
+	echo "TOKEN      : the token to login in to Opereto"
 	echo "AGENT_NAME : the agent identifier (optional, default is the hostname)"
 	echo "OS_USER    : the os user to run the agent (optional, default is current user)"
 	echo "OS_GROUP   : the os group to run the agent (optional, default is current group)"
 	echo "LOGLEVEL   : the agent log level (optional, default: info)"
 }
 
-if [[ -z "$opereto_host" || -z "$opereto_user" || -z "$opereto_pass" ]] ; then
+if [[ -z "$opereto_host" || -z "$opereto_token" ]] ; then
 	usage
 	exit 1
 fi
@@ -112,7 +107,7 @@ sudo sed --in-place /requiretty/d /etc/sudoers
 sudo sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile
 
 # run agent if not running
-agent_cmd="java $javaParams -jar opereto-agent.jar -host $opereto_host -name $agent_name -u $opereto_user -p $opereto_pass -loglevel $log_level &"
+agent_cmd="java $javaParams -jar opereto-agent.jar -host $opereto_host -name $agent_name -token $opereto_token -loglevel $log_level -log console &"
 
 `ps -ef | grep opereto-agent | grep -v grep`
 if [ $? -ne 0 ]; then
